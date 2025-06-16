@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client 2</title>
+</head>
+<body>
+    <!-- message recu  -->
+    <p>
+        <h4>boite de reception du client2: </h4>
+        <p id="receivesms">
+
+        </p>
+    </p>
+
+    <!-- message envoye  -->
+    <p>
+        <h4>boite d'envoie du  client2: </h4>
+        <p id="receivesms">
+
+        </p>
+    </p>
+    
+    <p>entrer votre message : <textarea id="sms"></textarea></p>
+    <p> <button id="sendBt">Envoyer le message </button></p>
+    
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function(){
+            console.log("etablissement de la communication avec le serveur ");
+            
+            const ws = new WebSocket("ws://localhost:8001");
+            const message = document.getElementById("sms");
+
+            ws.onopen = function(){
+                console.log("connexion au serveur reussit ... ");
+            };
+
+            ws.onclose = function(){
+                console.log("fermeture de la connexion reussit ");
+            };
+
+            ws.onerror = function(error){
+                console.log("erreur lors de la connexion au serveur : ", error.data)
+            };
+            
+            ws.onmessage = (message)=>{
+                console.log("message recu du client 1", message.data);
+            };
+
+            document.getElementById("sendBt").addEventListener('click', function(){
+                ws.send(message.value);
+                // console.log(message.value);
+            });
+        });
+
+    </script>
+</body>
+</html>
