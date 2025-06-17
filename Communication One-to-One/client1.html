@@ -33,7 +33,6 @@
 
     <!-- les actions a effectuer  -->
     <p> <button id="sendBt">Envoyer le message </button></p>
-    <p> <button id="logoutBt"> Se deconnecter </button></p>
     
     <script type="text/javascript">
         document.addEventListener("DOMContentLoaded", ()=>{
@@ -86,6 +85,9 @@
                 {
                     console.log("envoyeur : ", rec_data.sender);
                     console.log("message envoye : ", rec_data.message);
+                    document.getElementById("receive_sms").innerHTML += `
+                        ${rec_data.sender} <<< ${rec_data.message} <br>
+                    `;
                 }
                 
             };
@@ -106,11 +108,10 @@
                     sender: sender,
                 };
                 ws.send(JSON.stringify(send_data));
-                // document.getElementById("send_sms").innerHTML += `
-                //     >>> ${message.value} <br>
-                // `;
-
-                // message.value = "";
+                document.getElementById("send_sms").innerHTML += `
+                    ${dest} >>> ${sms} <br>
+                `;
+                message.value = "";
             });
         });
     </script>
