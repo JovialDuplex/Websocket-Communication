@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Client 2</title>
+    <title>Client 3</title>
 </head>
 <body>
     <!-- message recu  -->
     <p>
-        <h4>boite de reception du client2: </h4>
+        <h4>boite de reception du client3: </h4>
         <p id="receive_sms">
         
         </p>
@@ -16,7 +16,7 @@
 
     <!-- message envoye  -->
     <p>
-        <h4>boite d'envoie du  client2: </h4>
+        <h4>boite d'envoie du  client3: </h4>
         <p id="send_sms">
 
         </p>
@@ -36,10 +36,11 @@
                 console.log("connexion au serveur reussit ... ");
                 const send_data = {
                     action: "auth",
-                    id_client: "client2",
+                    id_client: "client3",
                 }; 
 
-                ws.send(JSON.stringify(send_data));    
+                ws.send(JSON.stringify(send_data));
+            
             };
 
             ws.onclose = function(){
@@ -63,16 +64,15 @@
                 {
                     console.log(rec_data.list_client);
                 }
-
             };
 
             document.getElementById("sendBt").addEventListener('click', function(){
                 ws.send(message.value);
-                document.getElementById("send_sms").innerHTML += `
-                    >>> ${message.value} <br>
-                `;
+                // document.getElementById("send_sms").innerHTML += `
+                //     >>> ${message.value} <br>
+                // `;
 
-                message.value = "";
+                // message.value = "";
                 // console.log(message.value);
             });
         });

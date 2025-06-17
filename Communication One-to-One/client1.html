@@ -6,10 +6,11 @@
     <title>Client 1</title>
 </head>
 <body>
+    <p> identifiant : <strong id="id_client">client 1</strong></p>
     <!-- message recu  -->
     <p>
         <h4>boite de reception du client1: </h4>
-        <p id="receivesms">
+        <p id="receive_sms">
 
         </p>
     </p>
@@ -17,13 +18,22 @@
     <!-- message envoye  -->
     <p>
         <h4>boite d'envoie du  client1: </h4>
-        <p id="receivesms">
+        <p id="send_sms">
 
         </p>
     </p>
     
     <p>entrer votre message : <textarea id="sms"></textarea></p>
+    <!-- liste des clients  -->
+    <p> envoyer a : 
+        <select id="client_list">
+
+        </select>
+    </p>
+
+    <!-- les actions a effectuer  -->
     <p> <button id="sendBt">Envoyer le message </button></p>
+    <p> <button id="logoutBt"> Se deconnecter </button></p>
     
     <script type="text/javascript">
         document.addEventListener("DOMContentLoaded", ()=>{
@@ -34,8 +44,13 @@
 
             ws.onopen = ()=>{
                 console.log("connexion etablie avec le serveur !! ");
-                // console.log(ws);
-                // ws.send("bonjour le serveur je suis le client ");    
+                // authentification du client 
+                const send_data = {
+                    action: "auth",
+                    id_client: "client1",
+                }; 
+
+                ws.send(JSON.stringify(send_data));
             };
             
             ws.onerror = (error)=>{
@@ -43,16 +58,36 @@
             };
 
             ws.onmessage = (message)=>{
-                console.log("message recu du client 2", message.data);
+                // messagerie du client 1
+                const rec_data = JSON.parse(message.data);
+                if(rec_data.action == "auth" && rec_data.auth_response == true)
+                {
+                    console.log("authentification du reussit");
+                    // console.log(rec_data.list_client);
+                }
+
+                if(rec_data.action == "send_list_client")
+                {
+                    console.log(rec_data.list_client);
+                }
+                
+                // document.getElementById("receive_sms").innerHTML += `
+                //     <<< ${message.data} <br>
+                // `;
             };
 
+            
             ws.onclose = ()=>{
                 console.log("fermeture de la connexion reussit ");
             };
 
             document.getElementById("sendBt").addEventListener('click', function(){
                 ws.send(message.value);
-                // console.log(message.value);
+                document.getElementById("send_sms").innerHTML += `
+                    >>> ${message.value} <br>
+                `;
+
+                message.value = "";
             });
         });
     </script>
