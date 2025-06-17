@@ -69,7 +69,23 @@ wss.on('connection', function connection(ws){
             }
            
         }
-        
+
+        // Systeme d'envoie de message a un client bien connu
+        if(sms.action == "send_sms")
+        {
+            console.log(sms.sender, " veut envoyer un message a : ", sms.dest);
+            // recuperation du destinataire
+            const dest = sms.dest;
+            let new_send = {
+                action: "receive_sms",
+                message: sms.message,
+                sender: sms.sender,
+            };
+
+            identification_client[`${dest}`].send(JSON.stringify(new_send))
+            console.log("message retranscrit a ", sms.dest);
+        }
+
     });
 
 });

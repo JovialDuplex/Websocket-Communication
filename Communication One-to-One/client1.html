@@ -41,7 +41,8 @@
 
             const ws = new WebSocket("ws://localhost:8001");
             const message = document.getElementById("sms");
-
+            const my_listClient = document.getElementById("client_list");
+            
             ws.onopen = ()=>{
                 console.log("connexion etablie avec le serveur !! ");
                 // authentification du client 
@@ -69,11 +70,24 @@
                 if(rec_data.action == "send_list_client")
                 {
                     console.log(rec_data.list_client);
+                    let i;
+                    document.getElementById("client_list").innerHTML = "";
+                        
+                    for(i=0; i < rec_data.list_client.length; i++)
+                    {
+                        
+                        document.getElementById("client_list").innerHTML += `
+                            <option value='${rec_data.list_client[i]}'> ${rec_data.list_client[i]} </option>
+                        `;
+                    }
+                }
+
+                if(rec_data.action == "receive_sms")
+                {
+                    console.log("envoyeur : ", rec_data.sender);
+                    console.log("message envoye : ", rec_data.message);
                 }
                 
-                // document.getElementById("receive_sms").innerHTML += `
-                //     <<< ${message.data} <br>
-                // `;
             };
 
             
@@ -82,12 +96,21 @@
             };
 
             document.getElementById("sendBt").addEventListener('click', function(){
-                ws.send(message.value);
-                document.getElementById("send_sms").innerHTML += `
-                    >>> ${message.value} <br>
-                `;
+                const dest = my_listClient.value;
+                const sms = message.value;
+                const sender = "client1";
+                const send_data = {
+                    action: "send_sms",
+                    dest: dest,
+                    message: sms,
+                    sender: sender,
+                };
+                ws.send(JSON.stringify(send_data));
+                // document.getElementById("send_sms").innerHTML += `
+                //     >>> ${message.value} <br>
+                // `;
 
-                message.value = "";
+                // message.value = "";
             });
         });
     </script>
